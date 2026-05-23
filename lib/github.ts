@@ -291,10 +291,11 @@ function mapEvent(e: any): ActivityEvent | null {
         sha: c.sha, message: c.message, url: `${repoUrl}/commit/${c.sha}`,
       })) as ActivityCommit[]
       const branch = (e.payload?.ref ?? '').replace(/^refs\/heads\//, '')
+      const size = e.payload?.size ?? commits.length
       return {
         ...base,
         kind: 'push',
-        action: `Pushed ${commits.length} commit${commits.length === 1 ? '' : 's'}`,
+        action: size > 0 ? `Pushed ${size} commit${size === 1 ? '' : 's'}` : 'Pushed commits',
         detail: branch ? `to ${branch}` : undefined,
         url: `${repoUrl}/commits/${branch || 'main'}`,
         commits,
