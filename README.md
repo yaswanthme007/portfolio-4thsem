@@ -1,4 +1,4 @@
-# Thamo Portfolio
+#  Yaswanth Portfolio
 ### Next.js 15 · React 19 · Apple Liquid Glass · TypeScript
 
 ---
