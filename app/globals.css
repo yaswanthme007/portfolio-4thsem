@@ -300,11 +300,13 @@ html[data-theme='dark'] .lg::before {
   width: fit-content;
   max-width: calc(100vw - 24px);
   z-index: 300;
+  isolation: isolate;
   display: flex; align-items: center; gap: 2px;
   padding: 5px 6px;
   border-radius: 999px;
   white-space: nowrap;
-  background: color-mix(in srgb, var(--glass-tint-strong) 100%, transparent);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--bg) 90%, var(--glass-hi) 10%);
   backdrop-filter:         blur(36px) saturate(180%);
   -webkit-backdrop-filter: blur(36px) saturate(180%);
   border-top:    1px solid var(--glass-hi);
@@ -315,6 +317,10 @@ html[data-theme='dark'] .lg::before {
     inset 0 1.5px 0 color-mix(in srgb, var(--glass-hi) 70%, transparent),
     inset 0 -1px 0 var(--glass-lo),
     var(--shadow-card);
+}
+
+html[data-theme='dark'] .nav {
+  background: color-mix(in srgb, var(--bg-soft) 88%, var(--glass-hi) 12%);
 }
 
 .nav-links,
