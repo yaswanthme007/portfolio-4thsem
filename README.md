@@ -116,7 +116,7 @@ REDIS_URL=redis://default:...
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD=change-me
 ADMIN_SESSION_SECRET=long-random-string
-GITHUB_USERNAME=thamothara7
+GITHUB_USERNAME=yaswanthme007
 GITHUB_TOKEN=github_pat_...
 ```
 
