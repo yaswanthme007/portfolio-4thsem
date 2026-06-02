@@ -120,6 +120,12 @@ portfolio-4thsem/
 - Admin updates are designed to refresh public-facing content without changing application code.
 - The repository currently includes generated `dist/` assets; the source application lives in the Next.js project structure above.
 
+## Contributing
+
+- Create a feature branch from `main` before making changes.
+- Keep commits focused and open a pull request for review before merging.
+- Run `npm run typecheck` before submitting documentation or code updates.
+
 ## Scripts
 
 | Command | Description |
