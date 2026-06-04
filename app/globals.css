@@ -6616,3 +6616,365 @@ html[data-theme='light'] .certs-row-link:hover { opacity: 0.6; }
   .certs-row-head    { gap: 8px; }
   .certs-row-link    { padding-top: 8px; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   SCROLL PROGRESS BAR — thin teal reading indicator at viewport top
+   ════════════════════════════════════════════════════════════════ */
+
+.scroll-progress-track {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  z-index: 500;
+  pointer-events: none;
+}
+.scroll-progress-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+  transform-origin: left center;
+  transform: scaleX(0);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 58%, transparent);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SCROLL REVEAL — sections fade + rise into view on scroll
+   JS adds .js-reveal-ready to body and .is-visible to each section
+   when it enters the viewport.
+   ════════════════════════════════════════════════════════════════ */
+
+.js-reveal-ready .home-section {
+  transition: opacity 0.70s ease,
+              transform 0.70s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.js-reveal-ready .home-section:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   NAV — stronger backdrop when the page is scrolled
+   ════════════════════════════════════════════════════════════════ */
+
+.nav {
+  transition: box-shadow 0.36s ease, background 0.36s ease;
+}
+.nav--scrolled {
+  box-shadow:
+    0 4px 28px rgba(0, 0, 0, 0.14),
+    0 1px 6px  rgba(0, 0, 0, 0.08),
+    var(--shadow-card);
+}
+html[data-theme='dark'] .nav--scrolled {
+  box-shadow:
+    0 4px 32px rgba(0, 0, 0, 0.46),
+    0 1px 8px  rgba(0, 0, 0, 0.32),
+    var(--shadow-card);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   HERO — staggered entrance + monogram interaction
+   ════════════════════════════════════════════════════════════════ */
+
+.hero-id   { animation: rise 0.86s 0.05s ease both; }
+.hero-copy { animation: rise 0.86s 0.20s ease both; }
+
+/* Monogram: subtle scale + accent glow on hover */
+.hero-id-monogram {
+  transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.34s ease;
+}
+.hero-id-monogram:hover {
+  transform: scale(1.08);
+  box-shadow:
+    0 0 0 5px  color-mix(in srgb, var(--accent) 14%, transparent),
+    0 0 24px   color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   DARK MODE — hover improvements (previously light-only)
+   ════════════════════════════════════════════════════════════════ */
+
+/* Work rows */
+html[data-theme='dark'] .home-work-row:hover {
+  background: color-mix(in srgb, var(--accent) 7%, var(--bg-soft));
+  padding-left: 14px;
+}
+html[data-theme='dark'] .home-work-row:hover .home-work-row-arrow {
+  color: var(--accent);
+  transform: translateX(3px);
+}
+
+/* Social icon links */
+html[data-theme='dark'] .hero-id-social:hover {
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* Hero résumé button */
+html[data-theme='dark'] .hero-id-resume:hover {
+  background: var(--ink-strong);
+  color: var(--bg);
+}
+
+/* Section "view all" link */
+html[data-theme='dark'] .sec-head-link:hover { color: var(--accent); }
+
+/* Certificate rows */
+html[data-theme='dark'] a.home-cert-row:hover {
+  background: color-mix(in srgb, var(--accent) 5%, var(--bg-soft));
+  padding-left: 14px;
+}
+html[data-theme='dark'] a.home-cert-row:hover .home-cert-link {
+  transform: translateX(3px);
+}
+
+/* TOC links */
+html[data-theme='dark'] .home-toc-link:hover {
+  color: var(--accent);
+  padding-left: 6px;
+  border-bottom-color: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+html[data-theme='dark'] .home-toc-link:hover .home-toc-label {
+  color: var(--accent);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   BUTTONS — press state for tactile micro-interaction
+   ════════════════════════════════════════════════════════════════ */
+
+.btn-glass:active {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 0.08s;
+}
+.btn-ghost:active {
+  transform: scale(0.97);
+  transition-duration: 0.08s;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   AVAILABLE PILL — refined pulsing dot
+   ════════════════════════════════════════════════════════════════ */
+
+@keyframes available-glow {
+  0%, 100% { box-shadow: 0 0 0 0   rgba(43, 198, 111, 0.00); }
+  50%      { box-shadow: 0 0 0 5px rgba(43, 198, 111, 0.24); }
+}
+.hero-available-dot {
+  animation: available-glow 2.4s ease-in-out infinite;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   PILLS — hover lift micro-animation
+   ════════════════════════════════════════════════════════════════ */
+
+.skill-pill,
+.stack-pill,
+.interest-pill {
+  transition: color 0.2s ease,
+              border-color 0.2s ease,
+              background 0.2s ease,
+              transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.skill-pill:hover,
+.stack-pill:hover,
+.interest-pill:hover {
+  transform: translateY(-2px);
+}
+
+/* Project tags in work rows lift subtly on row hover */
+.home-work-row:hover .project-tag {
+  border-color: color-mix(in srgb, var(--accent) 28%, var(--line));
+  transition: border-color 0.24s ease;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   HEATMAP — enhanced cell hover with accent glow
+   ════════════════════════════════════════════════════════════════ */
+
+.heatmap-cell {
+  transition: opacity 0.14s ease,
+              transform 0.20s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.20s ease;
+}
+.heatmap-cell:hover {
+  opacity: 1 !important;
+  transform: scale(1.45);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 58%, transparent);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   FOOTER — two-row layout with nav links
+   ════════════════════════════════════════════════════════════════ */
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+  padding: 40px 48px 36px;
+}
+.footer-inner {
+  width: 100%;
+  max-width: 920px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.footer-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.footer-name {
+  font-family: var(--fd);
+  font-style: normal;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--ink-muted);
+  letter-spacing: -0.005em;
+}
+.footer-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.footer-link {
+  font-family: var(--fm);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.footer-link:hover { color: var(--accent); }
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  font-family: var(--fm);
+  font-size: 10.5px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .footer { padding: 32px 20px 28px; }
+  .footer-top { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .footer-nav { gap: 16px; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ABOUT PAGE — timeline dot hover + interest pill stagger
+   ════════════════════════════════════════════════════════════════ */
+
+.timeline-dot {
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.28s ease;
+}
+.timeline-item:hover .timeline-dot {
+  transform: scale(1.35);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SERVICES & WORK CARDS — subtle hover lift in both themes
+   ════════════════════════════════════════════════════════════════ */
+
+.service-card.lg,
+.project-card.lg,
+.feature-card.lg {
+  transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.36s ease;
+}
+.service-card.lg:hover,
+.project-card.lg:hover,
+.feature-card.lg:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    var(--shadow-card),
+    0 8px 28px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   NAV LINK — active indicator animation on route change
+   ════════════════════════════════════════════════════════════════ */
+
+.nav-link {
+  transition: color 0.22s ease, background 0.22s ease;
+}
+.nav-link--active {
+  transition: color 0.22s ease, background 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SOCIAL LINKS (about page) — consistent hover in both themes
+   ════════════════════════════════════════════════════════════════ */
+
+html[data-theme='dark'] .social-link:hover {
+  background: color-mix(in srgb, var(--accent) 7%, var(--glass-tint-strong));
+  border-color: color-mix(in srgb, var(--accent) 38%, var(--line));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 12%, transparent);
+}
+html[data-theme='dark'] .social-link:hover .social-icon-wrapper {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+}
+html[data-theme='dark'] .social-link:hover .social-icon-wrapper svg { opacity: 1; }
+
+/* ════════════════════════════════════════════════════════════════
+   FILTER BUTTONS (work page) — smooth active transition
+   ════════════════════════════════════════════════════════════════ */
+
+.filter-btn {
+  transition: color 0.2s ease, border-color 0.2s ease,
+              background 0.2s ease, transform 0.2s ease;
+}
+.filter-btn:active { transform: scale(0.96); }
+
+/* ════════════════════════════════════════════════════════════════
+   CERTIFICATE CARDS — hover lift in both themes
+   ════════════════════════════════════════════════════════════════ */
+
+.certificate-card.lg {
+  transition: transform 0.36s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.36s ease;
+}
+.certificate-card.lg:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    var(--shadow-card),
+    0 8px 28px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   KEYBOARD SHORTCUTS BADGE — subtle hover
+   ════════════════════════════════════════════════════════════════ */
+
+.nav-kbd {
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.nav-kbd:hover {
+  color: var(--ink);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   PRINT — suppress all new UI chrome
+   ════════════════════════════════════════════════════════════════ */
+
+@media print {
+  .scroll-progress-track { display: none !important; }
+}

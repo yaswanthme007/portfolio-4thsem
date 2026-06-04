@@ -3,6 +3,8 @@ import Script              from 'next/script'
 import { Nav }               from '@/components/Nav'
 import { CommandPalette }    from '@/components/CommandPalette'
 import { KeyboardShortcuts } from '@/components/KeyboardShortcuts'
+import { ScrollProgress }    from '@/components/ScrollProgress'
+import { AnimateOnScroll }   from '@/components/AnimateOnScroll'
 import { getProjects }       from '@/lib/projects'
 import '@/app/globals.css'
 
@@ -40,14 +42,29 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {REJECTION_GUARD}
         </Script>
 
+        <ScrollProgress />
+        <AnimateOnScroll />
         <Nav />
         <main>{children}</main>
         <footer className="footer">
-          <span>Yaswanth</span>
-          <span className="footer-divider">·</span>
-          <span>Chennai, India</span>
-          <span className="footer-divider">·</span>
-          <span>{new Date().getFullYear()}</span>
+          <div className="footer-inner">
+            <div className="footer-top">
+              <span className="footer-name">Yaswanth K B</span>
+              <nav className="footer-nav" aria-label="Footer">
+                <a href="/work"     className="footer-link">Work</a>
+                <a href="/about"    className="footer-link">About</a>
+                <a href="/services" className="footer-link">Services</a>
+                <a href="/contact"  className="footer-link">Contact</a>
+              </nav>
+            </div>
+            <div className="footer-bottom">
+              <span>Chennai, India</span>
+              <span className="footer-divider">·</span>
+              <span>{new Date().getFullYear()}</span>
+              <span className="footer-divider">·</span>
+              <span>Built with Next.js</span>
+            </div>
+          </div>
         </footer>
 
         <CommandPalette projects={projectLite} />
