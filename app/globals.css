@@ -7244,20 +7244,23 @@ html[data-theme='light'] .filter-btn--active {
 .home-timeline {
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 .home-tl-item {
   display: grid;
-  grid-template-columns: 160px 24px 1fr;
+  grid-template-columns: 160px 20px 1fr;
   gap: 0 16px;
-  align-items: start;
+  /* stretch so the connector column fills the full row height for the line */
+  align-items: stretch;
   padding: 0 0 32px;
 }
 .home-tl-item:last-child { padding-bottom: 0; }
+
+/* ── left year column ── */
 .home-tl-left {
   display: flex;
   justify-content: flex-end;
-  padding-top: 5px;
+  /* align with dot */
+  padding-top: 3px;
 }
 .home-tl-year {
   font-family: var(--fm);
@@ -7268,12 +7271,24 @@ html[data-theme='light'] .filter-btn--active {
   text-align: right;
   line-height: 1.5;
 }
+/* inline year shown only on mobile (hidden on desktop) */
+.home-tl-year--inline {
+  display: none;
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 5px;
+}
+
+/* ── connector: dot + vertical line ── */
 .home-tl-connector {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0;
-  padding-top: 4px;
+  /* padding pushes dot down to align with first text line */
+  padding-top: 3px;
 }
 .home-tl-dot {
   width: 10px; height: 10px;
@@ -7285,13 +7300,16 @@ html[data-theme='light'] .filter-btn--active {
 }
 .home-tl-line {
   width: 1px;
-  flex: 1;
-  min-height: 100%;
+  flex: 1;          /* grows to fill remaining connector height */
   background: var(--line-strong);
   margin-top: 6px;
-  height: calc(100% - 10px);
 }
-.home-tl-right { min-width: 0; }
+
+/* ── right content ── */
+.home-tl-right {
+  min-width: 0;
+  padding-bottom: 4px;
+}
 .home-tl-title {
   font-family: var(--fd);
   font-size: clamp(18px, 2vw, 22px);
@@ -7318,11 +7336,30 @@ html[data-theme='light'] .filter-btn--active {
   max-width: 56ch;
 }
 
-@media (max-width: 600px) {
-  .home-tl-item  { grid-template-columns: 0 20px 1fr; }
+/* ── mobile — drop the year column, keep connector + content ── */
+@media (max-width: 640px) {
+  .home-tl-item {
+    /* 2 columns: thin connector | content */
+    grid-template-columns: 20px 1fr;
+    gap: 0 14px;
+    padding: 0 0 26px;
+  }
+  /* hide the left year column entirely */
   .home-tl-left  { display: none; }
-  .home-tl-year  { display: none; }
+  /* show inline year above the title instead */
+  .home-tl-year--inline { display: block; }
+  /* re-stack the two remaining columns correctly */
+  .home-tl-connector { grid-column: 1; }
+  .home-tl-right     { grid-column: 2; }
+  /* tighten text */
   .home-tl-title { font-size: 17px; }
+  .home-tl-org   { font-size: 13px; }
+  .home-tl-desc  { font-size: 13px; max-width: none; }
+}
+@media (max-width: 420px) {
+  .home-tl-item  { gap: 0 10px; padding: 0 0 22px; }
+  .home-tl-title { font-size: 16px; }
+  .home-tl-desc  { font-size: 12.5px; }
 }
 
 /* ════════════════════════════════════════════════════════════════

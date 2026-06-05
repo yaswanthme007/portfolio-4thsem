@@ -183,6 +183,8 @@ export default async function Home() {
                   {i < experience.length - 1 && <span className="home-tl-line" aria-hidden="true"/>}
                 </div>
                 <div className="home-tl-right">
+                  {/* year shown on mobile (the left column is hidden on small screens) */}
+                  <span className="home-tl-year--inline" aria-hidden="true">{exp.year}</span>
                   <h3 className="home-tl-title">{exp.title}</h3>
                   <p className="home-tl-org">{exp.org}</p>
                   {exp.desc && <p className="home-tl-desc">{exp.desc}</p>}
