@@ -7238,6 +7238,120 @@ html[data-theme='light'] .filter-btn--active {
 }
 
 /* ════════════════════════════════════════════════════════════════
+   HOME TIMELINE — experience on home page
+   ════════════════════════════════════════════════════════════════ */
+
+.home-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.home-tl-item {
+  display: grid;
+  grid-template-columns: 160px 24px 1fr;
+  gap: 0 16px;
+  align-items: start;
+  padding: 0 0 32px;
+}
+.home-tl-item:last-child { padding-bottom: 0; }
+.home-tl-left {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 5px;
+}
+.home-tl-year {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-align: right;
+  line-height: 1.5;
+}
+.home-tl-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding-top: 4px;
+}
+.home-tl-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+  outline: 1px solid var(--accent);
+  flex-shrink: 0;
+}
+.home-tl-line {
+  width: 1px;
+  flex: 1;
+  min-height: 100%;
+  background: var(--line-strong);
+  margin-top: 6px;
+  height: calc(100% - 10px);
+}
+.home-tl-right { min-width: 0; }
+.home-tl-title {
+  font-family: var(--fd);
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 400;
+  color: var(--ink-strong);
+  letter-spacing: -0.01em;
+  margin: 0 0 4px;
+  line-height: 1.2;
+}
+.home-tl-org {
+  font-family: var(--fd);
+  font-size: 14px;
+  color: var(--accent);
+  font-style: normal;
+  margin: 0 0 8px;
+}
+.home-tl-desc {
+  font-family: var(--f);
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.68;
+  color: var(--ink-soft);
+  margin: 0;
+  max-width: 56ch;
+}
+
+@media (max-width: 600px) {
+  .home-tl-item  { grid-template-columns: 0 20px 1fr; }
+  .home-tl-left  { display: none; }
+  .home-tl-year  { display: none; }
+  .home-tl-title { font-size: 17px; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ADMIN DRAG-AND-DROP
+   ════════════════════════════════════════════════════════════════ */
+
+.admin-drag-item {
+  cursor: default;
+  transition: background 0.18s ease, opacity 0.18s ease;
+}
+.admin-drag-item[draggable='true'] { cursor: grab; }
+.admin-drag-item[draggable='true']:active { cursor: grabbing; }
+.admin-drag-over {
+  background: color-mix(in srgb, var(--accent) 8%, var(--bg-soft)) !important;
+  border-top: 2px solid var(--accent) !important;
+}
+.admin-drag-handle {
+  font-size: 16px;
+  color: var(--ink-faint);
+  padding-right: 12px;
+  cursor: grab;
+  flex-shrink: 0;
+  user-select: none;
+  letter-spacing: -1px;
+  align-self: center;
+}
+.admin-drag-handle:active { cursor: grabbing; }
+
+/* ════════════════════════════════════════════════════════════════
    HOME V2 — completely restructured sections
    ════════════════════════════════════════════════════════════════ */
 

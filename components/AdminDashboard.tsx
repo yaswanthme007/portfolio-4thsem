@@ -186,6 +186,9 @@ export function AdminDashboard({ initialContent, initialProjects }: AdminDashboa
   const [showGithubPanel, setShowGithubPanel] = useState(false)
   const [githubLoading, setGithubLoading] = useState(false)
   const [githubError, setGithubError] = useState<string | null>(null)
+  // Drag-and-drop reorder state
+  const [dragIndex, setDragIndex] = useState<number | null>(null)
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
 
   /* ── Profile ── */
   async function saveProfile(event: FormEvent<HTMLFormElement>) {
@@ -282,6 +285,25 @@ export function AdminDashboard({ initialContent, initialProjects }: AdminDashboa
       feature4Title: '', feature4Desc: '',
     })
     projectFormRef.current?.reset()
+  }
+
+  /* ── Drag-and-drop reorder ── */
+  async function handleDrop(toIndex: number) {
+    if (dragIndex === null || dragIndex === toIndex) {
+      setDragIndex(null); setDragOverIndex(null); return
+    }
+    const reordered = [...projects]
+    const [moved] = reordered.splice(dragIndex, 1)
+    reordered.splice(toIndex, 0, moved)
+    setProjects(reordered)
+    setDragIndex(null); setDragOverIndex(null)
+    // Persist new order
+    const ids = reordered.map(p => p.id)
+    await fetch('/api/admin/projects/reorder', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids }),
+    })
   }
 
   /* ── GitHub import ── */
@@ -553,10 +575,23 @@ export function AdminDashboard({ initialContent, initialProjects }: AdminDashboa
             </div>
           </form>
 
+          <p className="admin-empty" style={{ fontSize: 11, padding: '6px 0 0', color: 'var(--ink-faint)' }}>
+            Drag ⠿ to reorder — first project shows as featured on home page.
+          </p>
           <div className="admin-list">
             {projects.length === 0 && <p className="admin-empty">No projects yet.</p>}
-            {projects.map(p => (
-              <article key={p.id} className="admin-list-item">
+            {projects.map((p, i) => (
+              <article
+                key={p.id}
+                className={`admin-list-item admin-drag-item${dragOverIndex === i ? ' admin-drag-over' : ''}`}
+                draggable
+                onDragStart={() => setDragIndex(i)}
+                onDragOver={e => { e.preventDefault(); setDragOverIndex(i) }}
+                onDragLeave={() => setDragOverIndex(null)}
+                onDrop={() => handleDrop(i)}
+                onDragEnd={() => { setDragIndex(null); setDragOverIndex(null) }}
+              >
+                <span className="admin-drag-handle" aria-hidden="true">⠿</span>
                 <div style={{ minWidth: 0, flex: 1 }}>
                   <span className="admin-preview-label">{p.index} · {p.year}</span>
                   <h3>{p.title}</h3>
@@ -708,7 +743,13 @@ export function AdminDashboard({ initialContent, initialProjects }: AdminDashboa
               <label className="field-label">Year
                 <input className="field-input" name="year" placeholder="2026" required />
               </label>
-              <label className="field-label">File
+              <label className="field-label">Type
+                <select className="field-input" name="certType">
+                  <option value="certification">Certification</option>
+                  <option value="internship">Internship Certificate</option>
+                </select>
+              </label>
+              <label className="field-label">File (optional)
                 <input className="field-input" name="file" type="file" accept="application/pdf,image/*" />
               </label>
             </div>
@@ -725,7 +766,7 @@ export function AdminDashboard({ initialContent, initialProjects }: AdminDashboa
             {certificates.length ? certificates.map(cert => (
               <article key={cert.id} className="admin-list-item">
                 <div style={{ minWidth: 0, flex: 1 }}>
-                  <span className="admin-preview-label">{cert.year}</span>
+                  <span className="admin-preview-label">{cert.year} · {cert.certType === 'internship' ? 'Internship' : 'Certification'}</span>
                   <h3>{cert.title}</h3>
                   <p>{cert.issuer}</p>
                   {cert.description && <p className="admin-list-desc">{cert.description}</p>}

@@ -29,6 +29,8 @@ export async function POST(request: NextRequest) {
     const issuer = String(formData.get('issuer') ?? '').trim()
     const year = String(formData.get('year') ?? '').trim()
     const description = String(formData.get('description') ?? '').trim()
+    const certTypeRaw = String(formData.get('certType') ?? '').trim()
+    const certType = (certTypeRaw === 'internship' || certTypeRaw === 'certification') ? certTypeRaw : undefined
     const file = formData.get('file')
 
     if (!title || !issuer || !year) {
@@ -59,6 +61,7 @@ export async function POST(request: NextRequest) {
       fileUrl,
       fileName,
       uploadedAt: new Date().toISOString(),
+      certType,
     })
 
     revalidatePath('/')

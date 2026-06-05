@@ -39,6 +39,7 @@ export const CertificateSchema = z.object({
   fileUrl: z.string().optional(),
   fileName: z.string().optional(),
   uploadedAt: z.string(),
+  certType: z.enum(['certification', 'internship']).optional(),
 })
 
 export const ExperienceItemSchema = z.object({
@@ -94,20 +95,31 @@ export const DEFAULT_PORTFOLIO: PortfolioData = {
   resume: { fileUrl: '', fileName: '', uploadedAt: '', mimeType: '' },
   certificates: [
     {
+      id: 'alkj-intern',
+      title: 'Web Development Internship Certificate',
+      issuer: 'ALKJ Technologies',
+      year: '2026',
+      description: 'Completed internship building React e-commerce platform with product management and cart features.',
+      uploadedAt: new Date().toISOString(),
+      certType: 'internship' as const,
+    },
+    {
+      id: 'evolve-intern',
+      title: 'GenAI Internship Certificate',
+      issuer: 'Evolve Robot Lab',
+      year: '2025',
+      description: 'Completed internship developing RAG-based AI chatbot with LangChain, FAISS, and Groq API.',
+      uploadedAt: new Date().toISOString(),
+      certType: 'internship' as const,
+    },
+    {
       id: 'cisco-cybersecurity',
       title: 'Introduction to Cybersecurity',
       issuer: 'Cisco Networking Academy',
       year: '2024',
       description: 'Fundamentals of cybersecurity concepts and best practices.',
       uploadedAt: new Date().toISOString(),
-    },
-    {
-      id: 'cisco-iot',
-      title: 'Introduction to IoT and Digital Transformation',
-      issuer: 'Cisco Networking Academy',
-      year: '2024',
-      description: 'IoT concepts and digital transformation strategies.',
-      uploadedAt: new Date().toISOString(),
+      certType: 'certification' as const,
     },
     {
       id: 'cisco-ai',
@@ -116,14 +128,16 @@ export const DEFAULT_PORTFOLIO: PortfolioData = {
       year: '2024',
       description: 'Foundations of modern artificial intelligence.',
       uploadedAt: new Date().toISOString(),
+      certType: 'certification' as const,
     },
     {
       id: 'aicte-cloud',
-      title: 'Cloud Engineer Virtual Internship (AWS Skill Builder)',
-      issuer: 'AICTE–EduSkills',
+      title: 'Cloud Engineer Virtual Internship',
+      issuer: 'AICTE–EduSkills (AWS Skill Builder)',
       year: '2024',
       description: 'Hands-on cloud engineering with AWS tools and services.',
       uploadedAt: new Date().toISOString(),
+      certType: 'certification' as const,
     },
     {
       id: 'nptel-iot',
@@ -132,14 +146,7 @@ export const DEFAULT_PORTFOLIO: PortfolioData = {
       year: '2024',
       description: 'In-depth study of IoT architecture and applications.',
       uploadedAt: new Date().toISOString(),
-    },
-    {
-      id: 'nptel-softskills',
-      title: 'Developing Soft Skills and Personality',
-      issuer: 'NPTEL',
-      year: '2024',
-      description: 'Communication, teamwork, and professional development.',
-      uploadedAt: new Date().toISOString(),
+      certType: 'certification' as const,
     },
   ],
   experience: [

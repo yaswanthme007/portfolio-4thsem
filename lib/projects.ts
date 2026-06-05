@@ -105,6 +105,18 @@ export async function deleteProject(id: string): Promise<boolean> {
   return true
 }
 
+export async function reorderProjects(orderedIds: string[]): Promise<AdminProject[]> {
+  const projects = await getProjects()
+  const map = new Map(projects.map(p => [p.id, p]))
+  const reordered = orderedIds.map(id => map.get(id)).filter(Boolean) as AdminProject[]
+  // Append any not in the ordered list at the end
+  const seen = new Set(orderedIds)
+  projects.filter(p => !seen.has(p.id)).forEach(p => reordered.push(p))
+  const indexed = reordered.map((p, i) => ({ ...p, index: computeIndex(i) }))
+  await saveProjects(indexed)
+  return indexed
+}
+
 async function saveProjects(projects: AdminProject[]) {
   const client = await getRedisClient()
   if (client) {

@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { LiquidGlass }       from '@/components/LiquidGlass'
 import { GitHubHeatmap }     from '@/components/GitHubHeatmap'
 import { RepoStars }         from '@/components/RepoStars'
 import { RecentActivity }    from '@/components/RecentActivity'
@@ -19,10 +18,18 @@ export default async function Home() {
     getRecentActivity(5),
   ])
 
-  const { profile, certificates } = content
+  const { profile, certificates, experience } = content
   const yearsBuilding = new Date().getFullYear() - STARTED_BUILDING
   const cleanLocation = profile.location.replace(/[\u{1F1E6}-\u{1F1FF}]{2}/gu, '').trim()
   const featured = projects.slice(0, 3)
+
+  // Split certificates by type
+  const internCerts = certificates.filter(c => c.certType === 'internship')
+  const techCerts   = certificates.filter(c => c.certType !== 'internship')
+
+  // Section numbering
+  let sectionIdx = 0
+  const next = () => String(++sectionIdx).padStart(2, '0')
 
   return (
     <div className="home-root">
@@ -31,7 +38,6 @@ export default async function Home() {
       <section className="hero-v2">
         <div className="hero-v2-inner">
 
-          {/* top bar */}
           <div className="hero-v2-topbar">
             <span className="hero-v2-label">Portfolio · {new Date().getFullYear()}</span>
             <span className="hero-v2-location">
@@ -43,30 +49,24 @@ export default async function Home() {
             </span>
           </div>
 
-          {/* main grid */}
           <div className="hero-v2-grid">
             <div className="hero-v2-left">
               <h1 className="hero-v2-name">
                 <span className="hero-v2-name-first">Yaswanth</span>
                 <span className="hero-v2-name-last">K B</span>
               </h1>
-
               <p className="hero-v2-role">IT Undergraduate &amp; Developer</p>
-
               <p className="hero-v2-bio">
                 Building real-world software — from{' '}
                 <strong>React frontends</strong> to{' '}
                 <strong>AI-powered systems</strong> — through internships at{' '}
                 Evolve Robot Lab and ALKJ Technologies.
-                My stack is <strong>React</strong>, <strong>Python</strong>, and{' '}
-                <strong>LangChain</strong>.
+                Stack: <strong>React</strong>, <strong>Python</strong>, <strong>LangChain</strong>.
               </p>
-
               <div className="hero-v2-actions">
                 <Link href="/work" className="btn-glass">View Work</Link>
                 <Link href="/contact" className="btn-ghost">Get in Touch</Link>
               </div>
-
               <div className="hero-v2-socials">
                 <a href={profile.githubUrl} target="_blank" rel="noreferrer" aria-label="GitHub" className="hero-v2-social">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="18" height="18">
@@ -111,50 +111,39 @@ export default async function Home() {
               </div>
             </div>
           </div>
-
         </div>
       </section>
 
-      {/* ══════════ SELECTED WORK — bento cards ══════════ */}
+      {/* ══════════ SELECTED WORK ══════════ */}
       {featured.length > 0 && (
         <section id="selected-work" className="home-section home-section--work">
           <div className="section-label-row">
-            <span className="section-num">01</span>
+            <span className="section-num">{next()}</span>
             <h2 className="section-title">Selected Work</h2>
             <Link href="/work" className="section-link">All projects →</Link>
           </div>
 
           <div className="work-bento">
-            {/* Featured card — large */}
             <Link href={`/work/${featured[0].slug}` as never} className="work-card work-card--featured">
               <div className="work-card-meta">
                 <span className="work-card-index">{featured[0].index}</span>
                 <span className="work-card-year">{featured[0].year}</span>
-                {featured[0].repoUrl && (
-                  <RepoStars repoUrl={featured[0].repoUrl} />
-                )}
+                {featured[0].repoUrl && <RepoStars repoUrl={featured[0].repoUrl} />}
               </div>
               <h3 className="work-card-title">{featured[0].title}</h3>
-              <p className="work-card-desc">{featured[0].description.slice(0, 160)}{featured[0].description.length > 160 ? '…' : ''}</p>
+              <p className="work-card-desc">{featured[0].description.slice(0, 180)}{featured[0].description.length > 180 ? '…' : ''}</p>
               <div className="work-card-tags">
-                {featured[0].tags.slice(0, 5).map(t => (
-                  <span key={t} className="work-card-tag">{t}</span>
-                ))}
+                {featured[0].tags.slice(0, 5).map(t => <span key={t} className="work-card-tag">{t}</span>)}
               </div>
               {(featured[0].liveUrl || featured[0].repoUrl) && (
                 <div className="work-card-links">
-                  {featured[0].liveUrl && (
-                    <span className="work-card-live">↗ Live</span>
-                  )}
-                  {featured[0].repoUrl && (
-                    <span className="work-card-repo">⌥ GitHub</span>
-                  )}
+                  {featured[0].liveUrl && <span className="work-card-live">↗ Live</span>}
+                  {featured[0].repoUrl && <span className="work-card-repo">⌥ GitHub</span>}
                 </div>
               )}
               <span className="work-card-arrow">→</span>
             </Link>
 
-            {/* Secondary cards */}
             <div className="work-bento-col">
               {featured.slice(1).map(p => (
                 <Link key={p.id} href={`/work/${p.slug}` as never} className="work-card work-card--small">
@@ -165,9 +154,7 @@ export default async function Home() {
                   <h3 className="work-card-title">{p.title}</h3>
                   <p className="work-card-desc">{p.description.slice(0, 90)}{p.description.length > 90 ? '…' : ''}</p>
                   <div className="work-card-tags">
-                    {p.tags.slice(0, 3).map(t => (
-                      <span key={t} className="work-card-tag">{t}</span>
-                    ))}
+                    {p.tags.slice(0, 3).map(t => <span key={t} className="work-card-tag">{t}</span>)}
                   </div>
                   <span className="work-card-arrow">→</span>
                 </Link>
@@ -177,17 +164,45 @@ export default async function Home() {
         </section>
       )}
 
-      {/* ══════════ CREDENTIALS — table style ══════════ */}
-      {certificates.length > 0 && (
-        <section id="credentials" className="home-section home-section--creds">
+      {/* ══════════ EXPERIENCE TIMELINE ══════════ */}
+      {experience.length > 0 && (
+        <section id="experience" className="home-section home-section--timeline">
           <div className="section-label-row">
-            <span className="section-num">02</span>
-            <h2 className="section-title">Credentials</h2>
-            <Link href="/certificates" className="section-link">All certificates →</Link>
+            <span className="section-num">{next()}</span>
+            <h2 className="section-title">Experience</h2>
+            <Link href="/about" className="section-link">Full profile →</Link>
           </div>
+          <div className="home-timeline">
+            {experience.map((exp, i) => (
+              <div key={exp.id} className="home-tl-item">
+                <div className="home-tl-left">
+                  <span className="home-tl-year">{exp.year}</span>
+                </div>
+                <div className="home-tl-connector">
+                  <span className="home-tl-dot" aria-hidden="true"/>
+                  {i < experience.length - 1 && <span className="home-tl-line" aria-hidden="true"/>}
+                </div>
+                <div className="home-tl-right">
+                  <h3 className="home-tl-title">{exp.title}</h3>
+                  <p className="home-tl-org">{exp.org}</p>
+                  {exp.desc && <p className="home-tl-desc">{exp.desc}</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
+      {/* ══════════ INTERNSHIP CERTIFICATES ══════════ */}
+      {internCerts.length > 0 && (
+        <section id="intern-certs" className="home-section home-section--creds">
+          <div className="section-label-row">
+            <span className="section-num">{next()}</span>
+            <h2 className="section-title">Internship Certificates</h2>
+            <Link href="/certificates" className="section-link">View all →</Link>
+          </div>
           <div className="creds-table">
-            {certificates.slice(0, 4).map((c, i) => {
+            {internCerts.slice(0, 4).map((c, i) => {
               const inner = (
                 <>
                   <span className="cred-num">0{i + 1}</span>
@@ -201,13 +216,42 @@ export default async function Home() {
               )
               return (
                 <div key={c.id} className="cred-row">
-                  {c.fileUrl ? (
-                    <a href={c.fileUrl} target="_blank" rel="noreferrer" className="cred-row-inner" aria-label={`View ${c.title}`}>
-                      {inner}
-                    </a>
-                  ) : (
-                    <div className="cred-row-inner">{inner}</div>
-                  )}
+                  {c.fileUrl
+                    ? <a href={c.fileUrl} target="_blank" rel="noreferrer" className="cred-row-inner">{inner}</a>
+                    : <div className="cred-row-inner">{inner}</div>}
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* ══════════ CERTIFICATIONS ══════════ */}
+      {techCerts.length > 0 && (
+        <section id="certifications" className="home-section home-section--creds">
+          <div className="section-label-row">
+            <span className="section-num">{next()}</span>
+            <h2 className="section-title">Certifications</h2>
+            <Link href="/certificates" className="section-link">View all →</Link>
+          </div>
+          <div className="creds-table">
+            {techCerts.slice(0, 4).map((c, i) => {
+              const inner = (
+                <>
+                  <span className="cred-num">0{i + 1}</span>
+                  <div className="cred-body">
+                    <span className="cred-title">{c.title}</span>
+                    <span className="cred-issuer">{c.issuer}</span>
+                  </div>
+                  <span className="cred-year">{c.year}</span>
+                  {c.fileUrl && <span className="cred-arrow">↗</span>}
+                </>
+              )
+              return (
+                <div key={c.id} className="cred-row">
+                  {c.fileUrl
+                    ? <a href={c.fileUrl} target="_blank" rel="noreferrer" className="cred-row-inner">{inner}</a>
+                    : <div className="cred-row-inner">{inner}</div>}
                 </div>
               )
             })}
@@ -219,32 +263,29 @@ export default async function Home() {
       {calendar && (
         <section id="field-notes" className="home-section home-section--heatmap">
           <div className="section-label-row">
-            <span className="section-num">03</span>
+            <span className="section-num">{next()}</span>
             <h2 className="section-title">Field Notes</h2>
             <span className="section-meta">A year, day by day</span>
           </div>
           <div className="heatmap-frame">
-            <GitHubHeatmap
-              weeks={calendar.weeks}
-              totalContributions={calendar.totalContributions}
-            />
+            <GitHubHeatmap weeks={calendar.weeks} totalContributions={calendar.totalContributions} />
           </div>
         </section>
       )}
 
-      {/* ══════════ LIVE FEED — terminal style ══════════ */}
+      {/* ══════════ LIVE FEED ══════════ */}
       {activity.length > 0 && (
         <section id="live-feed" className="home-section home-section--feed">
           <div className="section-label-row">
-            <span className="section-num">04</span>
+            <span className="section-num">{next()}</span>
             <h2 className="section-title">Live Feed</h2>
             <span className="section-meta">What I&rsquo;ve been shipping</span>
           </div>
           <div className="terminal-wrap">
             <div className="terminal-bar">
-              <span className="terminal-dot terminal-dot--red" />
-              <span className="terminal-dot terminal-dot--yellow" />
-              <span className="terminal-dot terminal-dot--green" />
+              <span className="terminal-dot terminal-dot--red"/>
+              <span className="terminal-dot terminal-dot--yellow"/>
+              <span className="terminal-dot terminal-dot--green"/>
               <span className="terminal-title">~/activity</span>
             </div>
             <div className="terminal-body">
@@ -254,10 +295,10 @@ export default async function Home() {
         </section>
       )}
 
-      {/* ══════════ CTA — contact ══════════ */}
+      {/* ══════════ CTA ══════════ */}
       <section id="reach-out" className="home-section home-section--cta">
         <div className="cta-v2">
-          <p className="cta-v2-eyebrow">05 · Let&rsquo;s talk</p>
+          <p className="cta-v2-eyebrow">{String(sectionIdx + 1).padStart(2, '0')} · Let&rsquo;s talk</p>
           <h2 className="cta-v2-heading">
             Got a project?<br/>
             <em>Let&rsquo;s build it.</em>

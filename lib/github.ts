@@ -287,14 +287,17 @@ function mapEvent(e: any): ActivityEvent | null {
 
   switch (e.type) {
     case 'PushEvent': {
-      const commits = (e.payload?.commits ?? []).map((c: any) => ({
+      const rawCommits = (e.payload?.commits ?? []) as any[]
+      const commits = rawCommits.map((c: any) => ({
         sha: c.sha, message: c.message, url: `${repoUrl}/commit/${c.sha}`,
       })) as ActivityCommit[]
+      // payload.size is the authoritative commit count — commits[] may be truncated or empty
+      const count = typeof e.payload?.size === 'number' ? e.payload.size : commits.length
       const branch = (e.payload?.ref ?? '').replace(/^refs\/heads\//, '')
       return {
         ...base,
         kind: 'push',
-        action: `Pushed ${commits.length} commit${commits.length === 1 ? '' : 's'}`,
+        action: `Pushed ${count} commit${count === 1 ? '' : 's'}`,
         detail: branch ? `to ${branch}` : undefined,
         url: `${repoUrl}/commits/${branch || 'main'}`,
         commits,
