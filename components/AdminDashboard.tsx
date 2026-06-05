@@ -4,6 +4,7 @@ import { useState, useRef, type ChangeEvent, type Dispatch, type FormEvent, type
 import { LiquidGlass } from './LiquidGlass'
 import type { Certificate, PortfolioData, ProfileUpdateInput, ResumeAsset, ExperienceItem, EducationItem } from '@/lib/portfolio'
 import type { AdminProject } from '@/lib/projects'
+import type { GitHubRepo } from '@/app/api/admin/github-repos/route'
 
 type AdminDashboardProps = {
   initialContent: PortfolioData
@@ -180,6 +181,11 @@ export function AdminDashboard({ initialContent, initialProjects }: AdminDashboa
     feature4Title: '', feature4Desc: '',
   })
   const projectFormRef = useRef<HTMLFormElement>(null)
+  // GitHub import state
+  const [githubRepos, setGithubRepos] = useState<GitHubRepo[]>([])
+  const [showGithubPanel, setShowGithubPanel] = useState(false)
+  const [githubLoading, setGithubLoading] = useState(false)
+  const [githubError, setGithubError] = useState<string | null>(null)
 
   /* ── Profile ── */
   async function saveProfile(event: FormEvent<HTMLFormElement>) {
@@ -276,6 +282,45 @@ export function AdminDashboard({ initialContent, initialProjects }: AdminDashboa
       feature4Title: '', feature4Desc: '',
     })
     projectFormRef.current?.reset()
+  }
+
+  /* ── GitHub import ── */
+  async function loadGithubRepos() {
+    setGithubLoading(true)
+    setGithubError(null)
+    try {
+      const res = await fetch('/api/admin/github-repos')
+      const data = await res.json()
+      if (!res.ok) { setGithubError(data.error || 'Failed to load repos'); return }
+      setGithubRepos(data.repos ?? [])
+      setShowGithubPanel(true)
+    } catch {
+      setGithubError('Network error — could not load repos')
+    } finally {
+      setGithubLoading(false)
+    }
+  }
+
+  function importFromRepo(repo: GitHubRepo) {
+    const year = repo.pushedAt
+      ? new Date(repo.pushedAt).getFullYear().toString()
+      : new Date().getFullYear().toString()
+    const tags = [
+      repo.language,
+      ...repo.topics.slice(0, 4),
+    ].filter(Boolean).join(', ')
+    setProjectForm(prev => ({
+      ...prev,
+      title: repo.name.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+      slug: repo.name,
+      description: repo.description ?? '',
+      year,
+      tags,
+      repoUrl: repo.htmlUrl,
+      liveUrl: '',
+    }))
+    setShowGithubPanel(false)
+    projectFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   async function saveProject(event: FormEvent<HTMLFormElement>) {
@@ -408,6 +453,48 @@ export function AdminDashboard({ initialContent, initialProjects }: AdminDashboa
             </div>
             <span className="admin-card-badge">{projects.length} live</span>
           </div>
+
+          {/* GitHub import panel */}
+          <div className="github-import-bar">
+            <button
+              type="button"
+              className={`btn-ghost${githubLoading ? '' : ''}`}
+              style={{ fontSize: 12, padding: '7px 16px' }}
+              onClick={showGithubPanel ? () => setShowGithubPanel(false) : loadGithubRepos}
+              disabled={githubLoading}
+            >
+              {githubLoading ? 'Loading repos…' : showGithubPanel ? '↑ Hide repos' : '↓ Import from GitHub'}
+            </button>
+            {githubError && <span className="admin-status admin-status--error" style={{ fontSize: 12 }}>{githubError}</span>}
+          </div>
+
+          {showGithubPanel && (
+            <div className="github-repo-list">
+              {githubRepos.length === 0 && (
+                <p className="admin-empty">No public repos found.</p>
+              )}
+              {githubRepos.map(repo => (
+                <button
+                  key={repo.fullName}
+                  type="button"
+                  className="github-repo-row"
+                  onClick={() => importFromRepo(repo)}
+                >
+                  <span className="github-repo-name">{repo.name}</span>
+                  {repo.description && (
+                    <span className="github-repo-desc">{repo.description.slice(0, 80)}{repo.description.length > 80 ? '…' : ''}</span>
+                  )}
+                  <span className="github-repo-meta">
+                    {repo.language && <span>{repo.language}</span>}
+                    {repo.stars > 0 && <span>★ {repo.stars}</span>}
+                    {repo.pushedAt && (
+                      <span>{new Date(repo.pushedAt).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}</span>
+                    )}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
 
           <form ref={projectFormRef} className="admin-form" onSubmit={saveProject}>
             <div className="form-grid">

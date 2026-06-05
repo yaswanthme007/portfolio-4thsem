@@ -5,11 +5,9 @@ import type { ActivityEvent, ActivityKind } from '@/lib/github'
 
 interface Props {
   initial: ActivityEvent[]
-  /** Polling interval in ms. Defaults to 90s. */
   intervalMs?: number
 }
 
-/** Max rows shown — kept small so the feed stays compact. */
 const LIMIT = 4
 
 const KIND_GLYPH: Record<ActivityKind, string> = {
@@ -17,7 +15,6 @@ const KIND_GLYPH: Record<ActivityKind, string> = {
   star: '★', fork: '⑂', create: '+', other: '·',
 }
 
-/** Locale-stable absolute label from the ISO string — server/client agree. */
 function isoLabel(iso: string): string {
   const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/)
   if (!m) return iso
@@ -26,7 +23,6 @@ function isoLabel(iso: string): string {
   return `${parseInt(d, 10)} ${MONTHS[parseInt(mo, 10) - 1]} ${y}, ${h}:${mi} UTC`
 }
 
-/** Relative-from-now ("2m ago"). Reads Date.now() — only call after mount. */
 function relative(iso: string): string {
   const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000)
   if (diff < 60)        return 'just now'
@@ -37,11 +33,6 @@ function relative(iso: string): string {
   return isoLabel(iso).split(',')[0]
 }
 
-/**
- * RecentActivity — a compact, minimal live GitHub feed: at most 4 rows,
- * no filters, no status bar, no expand. Each row links to GitHub. Still
- * polls in the background so it stays current.
- */
 export function RecentActivity({ initial, intervalMs = 90_000 }: Props) {
   const [events, setEvents] = useState<ActivityEvent[]>(initial.slice(0, LIMIT))
   const [mounted, setMounted] = useState(false)
@@ -54,7 +45,6 @@ export function RecentActivity({ initial, intervalMs = 90_000 }: Props) {
     return () => { mountedRef.current = false }
   }, [])
 
-  /* Background refresh */
   useEffect(() => {
     async function refresh() {
       try {
@@ -63,20 +53,25 @@ export function RecentActivity({ initial, intervalMs = 90_000 }: Props) {
         const data = await res.json() as { events: ActivityEvent[] }
         if (!mountedRef.current) return
         setEvents((data.events ?? []).slice(0, LIMIT))
-      } catch {
-        /* ignore */
-      }
+      } catch { /* ignore */ }
     }
     const id = setInterval(refresh, intervalMs)
     return () => clearInterval(id)
   }, [intervalMs])
 
-  /* Keep "2m ago" fresh */
   useEffect(() => {
     if (!mounted) return
     const id = setInterval(() => setTick(t => t + 1), 30_000)
     return () => clearInterval(id)
   }, [mounted])
+
+  if (events.length === 0) {
+    return (
+      <div className="activity-empty">
+        <span>No recent public activity found.</span>
+      </div>
+    )
+  }
 
   return (
     <ul className="activity-list">
@@ -89,13 +84,32 @@ export function RecentActivity({ initial, intervalMs = 90_000 }: Props) {
             className="activity-row-link"
           >
             <span className="activity-kind" aria-hidden="true">{KIND_GLYPH[ev.kind]}</span>
-            <span className="activity-action">
-              {ev.action}
-              {ev.detail && (
-                <span className="activity-action-detail"> {ev.detail.replace(/^to /, '')}</span>
+            <span className="activity-body">
+              <span className="activity-action">
+                {ev.action}
+                {ev.detail && (
+                  <span className="activity-action-detail"> {ev.detail.replace(/^to /, '')}</span>
+                )}
+              </span>
+              {/* Show commit messages for push events */}
+              {ev.kind === 'push' && ev.commits && ev.commits.length > 0 && (
+                <span className="activity-commits">
+                  {ev.commits.slice(0, 2).map(c => (
+                    <span key={c.sha} className="activity-commit-msg">
+                      <span className="activity-commit-sha">{c.sha.slice(0, 7)}</span>
+                      {' '}
+                      {c.message.split('\n')[0].slice(0, 72)}
+                    </span>
+                  ))}
+                  {ev.commits.length > 2 && (
+                    <span className="activity-commit-more">
+                      +{ev.commits.length - 2} more
+                    </span>
+                  )}
+                </span>
               )}
             </span>
-            <span className="activity-repo">{ev.repo}</span>
+            <span className="activity-repo">{ev.repo.split('/')[1] ?? ev.repo}</span>
             <span
               className="activity-when"
               title={isoLabel(ev.createdAt)}

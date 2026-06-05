@@ -42,94 +42,94 @@ html[data-theme='dark'] { color-scheme: dark; }
   --r-xl: 28px;
 }
 
-/* ── RETRO · CLASSIC — warm cream paper, warm dark ink, bright teal ── */
+/* ── MONOCHROME — true dark / pure white · editorial B&W ── */
 
 html[data-theme='dark'] {
-  /* core surfaces — warm dark espresso (retro, not pure black) */
-  --bg:           #211e18;
-  --bg-soft:      #2a261f;
-  --bg-deep:      #181611;
+  /* core surfaces — true dark, not warm */
+  --bg:           #0e0e0e;
+  --bg-soft:      #161616;
+  --bg-deep:      #080808;
 
-  /* ink — warm cream */
-  --ink:          #f1ead8;
-  --ink-strong:   #fdf8ea;
-  --ink-soft:     rgba(241, 234, 216, 0.74);
-  --ink-muted:    rgba(241, 234, 216, 0.50);
-  --ink-faint:    rgba(241, 234, 216, 0.32);
-  --ink-dim:      rgba(241, 234, 216, 0.16);
+  /* ink — cool light gray */
+  --ink:          #d4d4d4;
+  --ink-strong:   #f0f0f0;
+  --ink-soft:     rgba(212, 212, 212, 0.74);
+  --ink-muted:    rgba(212, 212, 212, 0.50);
+  --ink-faint:    rgba(212, 212, 212, 0.30);
+  --ink-dim:      rgba(212, 212, 212, 0.14);
 
-  /* accent — bright retro teal (lifted a touch so it glows on dark) */
-  --accent:        #2bc4b0;
-  --accent-soft:   rgba(43, 196, 176, 0.74);
-  --accent-deep:   #16998a;
-  --accent-glow:   rgba(43, 196, 176, 0.18);
+  /* accent — light silver (white-adjacent) */
+  --accent:        #c8c8c8;
+  --accent-soft:   rgba(200, 200, 200, 0.74);
+  --accent-deep:   #e4e4e4;
+  --accent-glow:   rgba(255, 255, 255, 0.06);
 
   /* borders */
-  --line:        rgba(241, 234, 216, 0.12);
-  --line-strong: rgba(241, 234, 216, 0.24);
-  --line-soft:   rgba(241, 234, 216, 0.06);
+  --line:        rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.17);
+  --line-soft:   rgba(255, 255, 255, 0.04);
 
   /* glass body tint */
-  --glass-tint:        rgba(255, 248, 228, 0.05);
-  --glass-tint-strong: rgba(255, 248, 228, 0.08);
-  --glass-hi:          rgba(255, 250, 236, 0.46);
-  --glass-lo:          rgba(0, 0, 0, 0.32);
+  --glass-tint:        rgba(255, 255, 255, 0.03);
+  --glass-tint-strong: rgba(255, 255, 255, 0.06);
+  --glass-hi:          rgba(255, 255, 255, 0.11);
+  --glass-lo:          rgba(0, 0, 0, 0.60);
 
-  /* heatmap cells — teal ramp */
-  --hm-0: rgba(241, 234, 216, 0.07);
-  --hm-1: rgba(43, 196, 176, 0.34);
-  --hm-2: rgba(43, 196, 176, 0.56);
-  --hm-3: rgba(43, 196, 176, 0.80);
-  --hm-4: #3fd6c0;
+  /* heatmap cells — grayscale ramp */
+  --hm-0: rgba(255, 255, 255, 0.05);
+  --hm-1: rgba(200, 200, 200, 0.28);
+  --hm-2: rgba(210, 210, 210, 0.52);
+  --hm-3: rgba(220, 220, 220, 0.76);
+  --hm-4: #d4d4d4;
 
-  --shadow-soft: 0 1px 2px rgba(0,0,0,0.22), 0 8px 24px rgba(0,0,0,0.32);
-  --shadow-card: 0 14px 36px rgba(0,0,0,0.42), 0 6px 16px rgba(0,0,0,0.26);
+  --shadow-soft: 0 1px 2px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.56);
+  --shadow-card: 0 14px 36px rgba(0,0,0,0.60), 0 6px 16px rgba(0,0,0,0.40);
 }
 
 :root,
 html[data-theme='light'] {
-  /* ── GALLERY MINIMAL — stark pure white, black ink, teal accent ── */
+  /* ── MONOCHROME LIGHT — pure white, near-black ink and accent ── */
 
   /* core surfaces — pure white */
   --bg:           #ffffff;
-  --bg-soft:      #f6f6f4;
-  --bg-deep:      #ededec;
+  --bg-soft:      #f5f5f5;
+  --bg-deep:      #ebebeb;
 
   /* ink — near-black */
   --ink:          #111111;
   --ink-strong:   #000000;
   --ink-soft:     rgba(17, 17, 17, 0.74);
-  --ink-muted:    rgba(17, 17, 17, 0.52);
-  --ink-faint:    rgba(17, 17, 17, 0.36);
-  --ink-dim:      rgba(17, 17, 17, 0.13);
+  --ink-muted:    rgba(17, 17, 17, 0.50);
+  --ink-faint:    rgba(17, 17, 17, 0.34);
+  --ink-dim:      rgba(17, 17, 17, 0.12);
 
-  /* accent — teal */
-  --accent:        #16998a;
-  --accent-soft:   rgba(22, 153, 138, 0.82);
-  --accent-deep:   #0f6f64;
-  --accent-glow:   rgba(22, 153, 138, 0.10);
+  /* accent — near-black (was teal) */
+  --accent:        #111111;
+  --accent-soft:   rgba(17, 17, 17, 0.70);
+  --accent-deep:   #000000;
+  --accent-glow:   rgba(0, 0, 0, 0.05);
 
   /* borders — crisp hairlines */
-  --line:        rgba(17, 17, 17, 0.13);
-  --line-strong: rgba(17, 17, 17, 0.26);
-  --line-soft:   rgba(17, 17, 17, 0.06);
+  --line:        rgba(17, 17, 17, 0.12);
+  --line-strong: rgba(17, 17, 17, 0.24);
+  --line-soft:   rgba(17, 17, 17, 0.05);
 
   /* glass body tint — mostly white */
-  --glass-tint:        rgba(255, 255, 255, 0.62);
-  --glass-tint-strong: rgba(255, 255, 255, 0.86);
+  --glass-tint:        rgba(255, 255, 255, 0.70);
+  --glass-tint-strong: rgba(255, 255, 255, 0.90);
   --glass-hi:          rgba(255, 255, 255, 1);
   --glass-lo:          rgba(17, 17, 17, 0.05);
 
-  /* heatmap cells — teal ramp on neutral */
+  /* heatmap cells — grayscale ramp */
   --hm-0: rgba(17, 17, 17, 0.06);
-  --hm-1: rgba(22, 153, 138, 0.30);
-  --hm-2: rgba(22, 153, 138, 0.54);
-  --hm-3: rgba(22, 153, 138, 0.78);
-  --hm-4: #16998a;
+  --hm-1: rgba(17, 17, 17, 0.24);
+  --hm-2: rgba(17, 17, 17, 0.50);
+  --hm-3: rgba(17, 17, 17, 0.76);
+  --hm-4: #0a0a0a;
 
-  /* shadows — barely there. gallery minimal is flat. */
-  --shadow-soft: 0 1px 2px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.04);
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.05), 0 6px 16px rgba(0,0,0,0.05);
+  /* shadows — subtle flat look */
+  --shadow-soft: 0 1px 2px rgba(0,0,0,0.05), 0 2px 8px rgba(0,0,0,0.05);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 6px 18px rgba(0,0,0,0.07);
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -149,10 +149,9 @@ body {
 /* Ambient radial gradient — warm cream with a soft teal wash */
 html[data-theme='dark'] body {
   background:
-    radial-gradient(58% 48% at 14% 16%, rgba(43, 196, 176, 0.14), transparent 60%),
-    radial-gradient(50% 42% at 88% 12%, rgba(43, 196, 176, 0.10), transparent 56%),
-    radial-gradient(55% 50% at 78% 88%, rgba(120, 95, 50, 0.16), transparent 60%),
-    linear-gradient(180deg, #1b1813 0%, #252118 50%, #161410 100%);
+    radial-gradient(55% 42% at 18% 12%, rgba(255, 255, 255, 0.025), transparent 55%),
+    radial-gradient(45% 36% at 88% 10%, rgba(255, 255, 255, 0.015), transparent 50%),
+    #0e0e0e;
 }
 /* Light mode — gallery minimal: flat pure white. No gradient, no texture. */
 html[data-theme='light'] body {
@@ -169,8 +168,9 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.30'/%3E%3C/svg%3E");
   background-size: 220px 220px;
 }
-/* No paper grain in light mode — gallery minimal is clean flat white. */
+/* Clean in both themes — no paper grain */
 html[data-theme='light'] body::before { display: none; }
+html[data-theme='dark']  body::before { display: none; }
 
 main { position: relative; z-index: 1; }
 
@@ -231,7 +231,7 @@ main { position: relative; z-index: 1; }
       var(--accent-glow), transparent 50%);
   mix-blend-mode: screen;
 }
-html[data-theme='light'] .lg::before { mix-blend-mode: soft-light; }
+html[data-theme='light'] .lg::before { mix-blend-mode: soft-light; opacity: 0.5; }
 
 /* Dark mode — kill the caustic shimmer (the "white oval" that followed
    the cursor on cards). The card's own borders and shadows are enough. */
@@ -5667,14 +5667,14 @@ html[data-theme='light'] a.home-cert-row:hover .home-cert-link {
 .activity-row-link {
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr) auto auto;
-  gap: 14px;
-  align-items: baseline;
-  padding: 12px 12px;
+  gap: 12px;
+  align-items: start;
+  padding: 14px 12px;
   text-decoration: none;
   color: inherit;
   transition: background 0.2s;
 }
-html[data-theme='light'] .activity-row-link:hover { background: var(--bg-soft); }
+.activity-row-link:hover { background: color-mix(in srgb, var(--accent) 5%, var(--bg-soft)); }
 .activity-kind {
   font-family: var(--fd);
   font-size: 15px;
@@ -5717,10 +5717,12 @@ html[data-theme='light'] .activity-row-link:hover { background: var(--bg-soft); 
     row-gap: 3px;
     padding: 11px 6px;
   }
-  .activity-kind   { grid-column: 1; grid-row: 1 / span 2; align-self: center; }
-  .activity-action { grid-column: 2; grid-row: 1; white-space: normal; }
+  .activity-kind   { grid-column: 1; grid-row: 1 / span 2; align-self: start; padding-top: 2px; }
+  .activity-body   { grid-column: 2; grid-row: 1; }
+  .activity-action { white-space: normal; }
   .activity-when   { grid-column: 3; grid-row: 1; font-size: 9px; }
   .activity-repo   { grid-column: 2; grid-row: 2; font-size: 10px; }
+  .activity-commits { display: none; }
 }
 
 
@@ -6977,4 +6979,260 @@ html[data-theme='dark'] .social-link:hover .social-icon-wrapper svg { opacity: 1
 
 @media print {
   .scroll-progress-track { display: none !important; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ADMIN — GitHub import panel
+   ════════════════════════════════════════════════════════════════ */
+
+.github-import-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0 4px;
+  border-top: 1px dashed var(--line);
+  margin-top: 4px;
+}
+
+.github-repo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  margin-bottom: 8px;
+  max-height: 380px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+.github-repo-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.18s ease;
+}
+.github-repo-row:last-child { border-bottom: 0; }
+.github-repo-row:hover {
+  background: color-mix(in srgb, var(--accent) 6%, var(--bg-soft));
+}
+.github-repo-name {
+  font-family: var(--fm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-strong);
+  letter-spacing: 0.02em;
+}
+.github-repo-desc {
+  font-size: 12px;
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+.github-repo-meta {
+  display: flex;
+  gap: 12px;
+  margin-top: 2px;
+}
+.github-repo-meta span {
+  font-family: var(--fm);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ACTIVITY FEED — commit messages
+   ════════════════════════════════════════════════════════════════ */
+
+.activity-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+.activity-commits {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 2px;
+}
+.activity-commit-msg {
+  font-family: var(--fm);
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+}
+.activity-commit-sha {
+  color: var(--accent);
+  font-weight: 500;
+  opacity: 0.8;
+}
+.activity-commit-more {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+.activity-empty {
+  padding: 28px 24px;
+  color: var(--ink-muted);
+  font-size: 13.5px;
+  text-align: center;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SECTION IMPROVEMENTS — bolder heads, animated dividers, spacing
+   ════════════════════════════════════════════════════════════════ */
+
+/* Bigger, bolder section titles */
+.sec-head-title {
+  font-size: clamp(22px, 2.4vw, 30px) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.022em !important;
+}
+
+/* Section number — more distinct */
+.sec-head-num {
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.26em !important;
+}
+
+/* Eyebrow label */
+.sec-head-eyebrow {
+  font-size: 9.5px !important;
+  letter-spacing: 0.26em !important;
+  text-transform: uppercase;
+  color: var(--ink-muted) !important;
+}
+
+/* Animated bottom rule on section head — grows left-to-right when visible */
+.sec-head {
+  position: relative;
+}
+.sec-head::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
+}
+.is-visible .sec-head::after {
+  width: 100%;
+}
+
+/* Work row — improved meta layout */
+.home-work-row-title {
+  font-size: clamp(22px, 2.4vw, 28px) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.018em !important;
+}
+
+/* Cert title — bolder */
+.home-cert-title {
+  font-weight: 500 !important;
+}
+
+/* CTA section — more impactful */
+.home-cta {
+  border-radius: var(--r-xl) !important;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SCROLL REVEAL — enhanced with blur + stagger
+   Override the previous reveal to add blur
+   ════════════════════════════════════════════════════════════════ */
+
+.js-reveal-ready .home-section {
+  transition: opacity 0.72s ease,
+              transform 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+              filter 0.60s ease !important;
+}
+.js-reveal-ready .home-section:not(.is-visible) {
+  opacity: 0 !important;
+  transform: translateY(24px) !important;
+  filter: blur(2px) !important;
+}
+.js-reveal-ready .home-section.is-visible {
+  filter: blur(0) !important;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   B&W MONO — color overrides for elements using old teal values
+   ════════════════════════════════════════════════════════════════ */
+
+/* Hero available dot stays green — status indicator, not accent */
+.hero-available-dot {
+  background: #22c55e !important;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25) !important;
+}
+
+/* Status dot in eyebrow */
+.status-dot {
+  background: var(--accent) !important;
+}
+
+/* Local clock dot stays a status color */
+.local-clock-dot {
+  background: var(--accent);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+/* Chapter rail dot active */
+.chapter-rail-item.is-active .chapter-rail-dot {
+  box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+/* Heatmap tooltip — dark bg for contrast */
+html[data-theme='light'] .heatmap-tooltip {
+  background: var(--ink-strong);
+  color: var(--bg);
+  border-color: transparent;
+}
+
+/* Timeline — gradient uses accent */
+.timeline::before {
+  background: linear-gradient(to bottom, var(--accent), var(--line-soft));
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MONOCHROME NAV ACTIVE — darker highlight for B&W
+   ════════════════════════════════════════════════════════════════ */
+
+.nav-link--active {
+  color: var(--ink-strong) !important;
+  background: color-mix(in srgb, var(--accent) 10%, transparent) !important;
+}
+html[data-theme='light'] .nav-link--active {
+  background: var(--bg-deep) !important;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   FILTER BUTTONS — monochrome active
+   ════════════════════════════════════════════════════════════════ */
+
+.filter-btn--active {
+  color: var(--ink-strong) !important;
+  background: color-mix(in srgb, var(--accent) 10%, transparent) !important;
+  border-color: var(--line-strong) !important;
+}
+html[data-theme='light'] .filter-btn--active {
+  background: var(--bg-deep) !important;
+  border-color: var(--ink-faint) !important;
 }

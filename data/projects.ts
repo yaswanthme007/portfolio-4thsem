@@ -15,19 +15,32 @@ export interface Project {
 
 export const PROJECTS: Project[] = [
   {
-    id: 'ecommerce-admin',
-    slug: 'ecommerce-admin',
+    id: 'notesroom',
+    slug: 'notesroom',
     index: '01',
-    title: 'E-Commerce Admin & Storefront',
+    title: 'NotesRoom',
     year: '2025',
-    description: 'A complete e-commerce system with an admin dashboard and customer storefront — product management, real-time sync, cart, and category filtering built in React.',
-    tags: ['React', 'Tailwind CSS', 'Local Storage', 'React Router'],
-    repoUrl: 'https://github.com/yaswanthme007',
+    description: 'Full-stack collaborative notes platform — create rooms, share PDFs/images/docs, and chat with a per-room AI assistant (Llama 3 via Groq) that answers questions grounded in your uploaded content.',
+    tags: ['Next.js', 'Node.js', 'MongoDB', 'Firebase', 'Groq API', 'TypeScript'],
+    repoUrl: 'https://github.com/yaswanthme007/notesroom',
+    liveUrl: 'https://notesroom.vercel.app',
     features: [
-      { title: 'Admin Dashboard', description: 'Full CRUD product management using Local Storage as a data layer with real-time sync to the storefront.' },
-      { title: 'Storefront', description: 'Dynamic product listings with category filtering, search, sorting, and cart functionality.' },
-      { title: 'Reusable Components', description: 'Modular React components following best frontend practices for maintainability.' },
-      { title: 'Cart System', description: 'Add, remove, and update quantity logic with persistent cart state.' },
+      {
+        title: 'Room Collaboration',
+        description: 'Create rooms with unique 6-character codes. Role-based access: Admin (full control), Editor (add/edit), and Viewer (read-only).',
+      },
+      {
+        title: 'File Management',
+        description: 'Upload and preview PDFs, images, Word, and PowerPoint files in-browser via Firebase Storage with folder organisation.',
+      },
+      {
+        title: 'AI Chatbot',
+        description: 'Per-room Llama 3 assistant (Groq API) that extracts, chunks, and embeds documents for grounded, accurate answers.',
+      },
+      {
+        title: 'Semantic Search',
+        description: 'Vector embeddings with in-memory cosine similarity and MongoDB for fast, relevant document retrieval.',
+      },
     ],
   },
   {
@@ -36,7 +49,7 @@ export const PROJECTS: Project[] = [
     index: '02',
     title: 'Groq RAG Chatbot',
     year: '2025',
-    description: 'An AI-powered chatbot using Groq API (LLaMA-3) with a RAG pipeline — users upload PDFs and query content using natural language via semantic search.',
+    description: 'AI-powered PDF Q&A chatbot using Groq API (LLaMA-3) with a RAG pipeline — upload any PDF and query its content with natural language via semantic search.',
     tags: ['Python', 'Streamlit', 'Groq API', 'LangChain', 'FAISS'],
     repoUrl: 'https://github.com/yaswanthme007',
     features: [
@@ -52,7 +65,7 @@ export const PROJECTS: Project[] = [
     index: '03',
     title: 'To-Do List Application',
     year: '2024',
-    description: 'A responsive task management app with persistent storage — task creation, deletion, and completion tracking built with React state management.',
+    description: 'Responsive task management app with persistent storage — task creation, deletion, and completion tracking built with clean React state management.',
     tags: ['React', 'HTML', 'CSS'],
     repoUrl: 'https://github.com/yaswanthme007',
     features: [
