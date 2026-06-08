@@ -3,6 +3,8 @@ import { AdminDashboard } from '@/components/AdminDashboard'
 import { getPortfolioData } from '@/lib/portfolio'
 import { getProjects } from '@/lib/projects'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Admin — Yaswanth',
   description: 'Portfolio admin console for profile, resume, certificates, projects and management.',

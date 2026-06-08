@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
   revalidatePath('/')
   revalidatePath('/work')
   revalidatePath('/projects')
+  revalidatePath('/dashboard-yaswanth')
 
   return NextResponse.json({ ok: true, project })
 }
@@ -60,6 +61,7 @@ export async function PUT(request: NextRequest) {
   revalidatePath('/work')
   revalidatePath('/projects')
   revalidatePath(`/work/${project.slug}`)
+  revalidatePath('/dashboard-yaswanth')
 
   return NextResponse.json({ ok: true, project })
 }
@@ -79,6 +81,7 @@ export async function DELETE(request: NextRequest) {
   revalidatePath('/')
   revalidatePath('/work')
   revalidatePath('/projects')
+  revalidatePath('/dashboard-yaswanth')
 
   return NextResponse.json({ ok: true })
 }
