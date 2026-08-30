@@ -51,10 +51,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <div className="footer-top">
               <span className="footer-name">Yaswanth K B</span>
               <nav className="footer-nav" aria-label="Footer">
-                <a href="/work"     className="footer-link">Work</a>
-                <a href="/about"    className="footer-link">About</a>
-                <a href="/services" className="footer-link">Services</a>
-                <a href="/contact"  className="footer-link">Contact</a>
+                <a href="/work"       className="footer-link">Work</a>
+                <a href="/hackathons" className="footer-link">Hackathons</a>
+                <a href="/about"      className="footer-link">About</a>
+                <a href="/services"   className="footer-link">Services</a>
+                <a href="/contact"    className="footer-link">Contact</a>
               </nav>
             </div>
             <div className="footer-bottom">
