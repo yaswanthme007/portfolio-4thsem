@@ -8094,12 +8094,12 @@ html[data-theme='light'] .terminal-wrap {
   transform: none !important;
   filter: none !important;
 }
-.hackathon-chapter .hackathon-gallery,
-.hackathon-chapter .hackathon-eyebrow,
-.hackathon-chapter .hackathon-title,
-.hackathon-chapter .hackathon-desc,
-.hackathon-chapter .hackathon-tags,
-.hackathon-chapter .hackathon-links {
+.js-reveal-ready .hackathon-chapter .hackathon-gallery,
+.js-reveal-ready .hackathon-chapter .hackathon-eyebrow,
+.js-reveal-ready .hackathon-chapter .hackathon-title,
+.js-reveal-ready .hackathon-chapter .hackathon-desc,
+.js-reveal-ready .hackathon-chapter .hackathon-tags,
+.js-reveal-ready .hackathon-chapter .hackathon-links {
   opacity: 0;
   transform: translateY(20px);
   filter: blur(6px);

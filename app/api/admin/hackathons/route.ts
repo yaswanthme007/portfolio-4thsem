@@ -26,7 +26,7 @@ async function encodeImages(formData: FormData): Promise<{ images: HackathonImag
 }
 
 function slugify(title: string) {
-  return title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+  return title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '')
 }
 
 export async function GET(request: NextRequest) {
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
   const title = String(formData.get('title') ?? '').trim()
   const body = {
     title,
-    slug: String(formData.get('slug') ?? '').trim() || slugify(title),
+    slug: String(formData.get('slug') ?? '').trim() || slugify(title) || `hackathon-${Date.now()}`,
     description: String(formData.get('description') ?? '').trim(),
     year: String(formData.get('year') ?? '').trim(),
     tags: String(formData.get('tags') ?? '').split(',').map(t => t.trim()).filter(Boolean),
