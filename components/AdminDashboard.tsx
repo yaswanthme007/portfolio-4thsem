@@ -4,14 +4,16 @@ import { useState, useRef, type ChangeEvent, type Dispatch, type FormEvent, type
 import { LiquidGlass } from './LiquidGlass'
 import type { Certificate, PortfolioData, ProfileUpdateInput, ResumeAsset, ExperienceItem, EducationItem } from '@/lib/portfolio'
 import type { AdminProject } from '@/lib/projects'
+import type { Hackathon, HackathonImage } from '@/lib/hackathons'
 import type { GitHubRepo } from '@/app/api/admin/github-repos/route'
 
 type AdminDashboardProps = {
   initialContent: PortfolioData
   initialProjects: AdminProject[]
+  initialHackathons: Hackathon[]
 }
 
-type TabKey = 'overview' | 'projects' | 'profile' | 'resume' | 'certificates' | 'timeline'
+type TabKey = 'overview' | 'projects' | 'hackathons' | 'profile' | 'resume' | 'certificates' | 'timeline'
 
 function toProfileForm(profile: PortfolioData['profile']): ProfileUpdateInput {
   return {
@@ -159,7 +161,7 @@ function TimelineAdmin({
 /* ══════════════════════════════════════════════
    MAIN ADMIN DASHBOARD
    ══════════════════════════════════════════════ */
-export function AdminDashboard({ initialContent, initialProjects }: AdminDashboardProps) {
+export function AdminDashboard({ initialContent, initialProjects, initialHackathons }: AdminDashboardProps) {
   const [tab, setTab] = useState<TabKey>('overview')
   const [profile, setProfile] = useState<ProfileUpdateInput>(() => toProfileForm(initialContent.profile))
   const [resume, setResume] = useState<ResumeAsset>(initialContent.resume)
@@ -189,6 +191,18 @@ export function AdminDashboard({ initialContent, initialProjects }: AdminDashboa
   // Drag-and-drop reorder state
   const [dragIndex, setDragIndex] = useState<number | null>(null)
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
+  // Hackathons state
+  const [hackathons, setHackathons] = useState<Hackathon[]>(initialHackathons)
+  const [hackathonStatus, setHackathonStatus] = useState<{ msg: string; error?: boolean } | null>(null)
+  const [editingHackathon, setEditingHackathon] = useState<Hackathon | null>(null)
+  const [hackathonForm, setHackathonForm] = useState({
+    title: '', slug: '', description: '', year: String(new Date().getFullYear()),
+    tags: '', repoUrl: '', liveUrl: '',
+  })
+  const [hackathonImages, setHackathonImages] = useState<HackathonImage[]>([])
+  const hackathonFormRef = useRef<HTMLFormElement>(null)
+  const [hackathonDragIndex, setHackathonDragIndex] = useState<number | null>(null)
+  const [hackathonDragOverIndex, setHackathonDragOverIndex] = useState<number | null>(null)
 
   /* ── Profile ── */
   async function saveProfile(event: FormEvent<HTMLFormElement>) {
@@ -306,6 +320,84 @@ export function AdminDashboard({ initialContent, initialProjects }: AdminDashboa
     })
   }
 
+  /* ── Hackathons ── */
+  function startEditHackathon(h: Hackathon) {
+    setEditingHackathon(h)
+    setHackathonForm({
+      title: h.title, slug: h.slug, description: h.description, year: h.year,
+      tags: h.tags.join(', '), repoUrl: h.repoUrl ?? '', liveUrl: h.liveUrl ?? '',
+    })
+    setHackathonImages(h.images)
+  }
+
+  function clearHackathonForm() {
+    setEditingHackathon(null)
+    setHackathonForm({
+      title: '', slug: '', description: '', year: String(new Date().getFullYear()),
+      tags: '', repoUrl: '', liveUrl: '',
+    })
+    setHackathonImages([])
+    hackathonFormRef.current?.reset()
+  }
+
+  function removeHackathonImage(idx: number) {
+    setHackathonImages(prev => prev.filter((_, i) => i !== idx))
+  }
+
+  async function handleHackathonDrop(toIndex: number) {
+    if (hackathonDragIndex === null || hackathonDragIndex === toIndex) {
+      setHackathonDragIndex(null); setHackathonDragOverIndex(null); return
+    }
+    const reordered = [...hackathons]
+    const [moved] = reordered.splice(hackathonDragIndex, 1)
+    reordered.splice(toIndex, 0, moved)
+    setHackathons(reordered)
+    setHackathonDragIndex(null); setHackathonDragOverIndex(null)
+    const ids = reordered.map(h => h.id)
+    await fetch('/api/admin/hackathons/reorder', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids }),
+    })
+  }
+
+  async function saveHackathon(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setHackathonStatus({ msg: editingHackathon ? 'Updating hackathon…' : 'Creating hackathon…' })
+    const body = new FormData(event.currentTarget)
+    if (editingHackathon) {
+      body.append('existingImages', JSON.stringify(hackathonImages))
+    }
+    const url = editingHackathon
+      ? `/api/admin/hackathons?id=${encodeURIComponent(editingHackathon.id)}`
+      : '/api/admin/hackathons'
+    const response = await fetch(url, { method: editingHackathon ? 'PUT' : 'POST', body })
+    let data: any
+    try { data = await response.json() } catch { data = { error: 'Invalid response' } }
+    if (!response.ok) {
+      setHackathonStatus({ msg: data?.error || (response.status === 413 ? 'Images too large.' : 'Unable to save hackathon.'), error: true })
+      return
+    }
+    if (editingHackathon) {
+      setHackathons(prev => prev.map(h => h.id === editingHackathon.id ? data.hackathon : h))
+      setHackathonStatus({ msg: 'Hackathon updated' })
+    } else {
+      setHackathons(prev => [data.hackathon, ...prev])
+      setHackathonStatus({ msg: 'Hackathon created' })
+    }
+    clearHackathonForm()
+  }
+
+  async function deleteHackathonById(id: string) {
+    setHackathonStatus({ msg: 'Deleting…' })
+    const response = await fetch(`/api/admin/hackathons?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
+    let data: any
+    try { data = await response.json() } catch { data = { error: 'Invalid response' } }
+    if (!response.ok) { setHackathonStatus({ msg: data?.error || 'Unable to delete.', error: true }); return }
+    setHackathons(prev => prev.filter(h => h.id !== id))
+    setHackathonStatus({ msg: 'Hackathon deleted' })
+  }
+
   /* ── GitHub import ── */
   async function loadGithubRepos() {
     setGithubLoading(true)
@@ -395,6 +487,7 @@ export function AdminDashboard({ initialContent, initialProjects }: AdminDashboa
   const tabs: { key: TabKey; label: string; count?: number }[] = [
     { key: 'overview',     label: 'Overview' },
     { key: 'projects',     label: 'Projects',     count: projects.length },
+    { key: 'hackathons',   label: 'Hackathons',   count: hackathons.length },
     { key: 'profile',      label: 'Profile' },
     { key: 'resume',       label: 'Resume' },
     { key: 'certificates', label: 'Certificates', count: certificates.length },
@@ -603,6 +696,113 @@ export function AdminDashboard({ initialContent, initialProjects }: AdminDashboa
                 <div className="admin-row-actions">
                   <button type="button" className="admin-btn-sm" onClick={() => startEditProject(p)}>Edit</button>
                   <button type="button" className="admin-btn-sm admin-btn-sm--danger" onClick={() => deleteProjectById(p.id)}>Delete</button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </LiquidGlass>
+      )}
+
+      {/* ── HACKATHONS ── */}
+      {tab === 'hackathons' && (
+        <LiquidGlass className="admin-card" interactive>
+          <div className="card-topline">
+            <div>
+              <p className="sec-label">Hackathons</p>
+              <h2 className="admin-card-title">{editingHackathon ? `Editing: ${editingHackathon.title}` : 'Add a hackathon'}</h2>
+            </div>
+            <span className="admin-card-badge">{hackathons.length} live</span>
+          </div>
+
+          <form ref={hackathonFormRef} className="admin-form" onSubmit={saveHackathon}>
+            <div className="form-grid">
+              <label className="field-label">Title
+                <input className="field-input" name="title" required value={hackathonForm.title}
+                  onChange={e => setHackathonForm(p => ({ ...p, title: e.target.value }))} />
+              </label>
+              <label className="field-label">Slug (auto-generated)
+                <input className="field-input" name="slug" placeholder="my-hackathon" value={hackathonForm.slug}
+                  onChange={e => setHackathonForm(p => ({ ...p, slug: e.target.value }))} />
+              </label>
+              <label className="field-label">Year
+                <input className="field-input" name="year" required value={hackathonForm.year}
+                  onChange={e => setHackathonForm(p => ({ ...p, year: e.target.value }))} />
+              </label>
+              <label className="field-label">Tags (comma separated)
+                <input className="field-input" name="tags" placeholder="AI, Hackathon, 24hr" value={hackathonForm.tags}
+                  onChange={e => setHackathonForm(p => ({ ...p, tags: e.target.value }))} />
+              </label>
+              <label className="field-label">GitHub URL
+                <input className="field-input" name="repoUrl" type="url" value={hackathonForm.repoUrl}
+                  onChange={e => setHackathonForm(p => ({ ...p, repoUrl: e.target.value }))} />
+              </label>
+              <label className="field-label">Live URL
+                <input className="field-input" name="liveUrl" type="url" value={hackathonForm.liveUrl}
+                  onChange={e => setHackathonForm(p => ({ ...p, liveUrl: e.target.value }))} />
+              </label>
+            </div>
+            <label className="field-label">Description
+              <textarea required className="field-input field-textarea" name="description" value={hackathonForm.description}
+                onChange={e => setHackathonForm(p => ({ ...p, description: e.target.value }))} />
+            </label>
+
+            {hackathonImages.length > 0 && (
+              <div className="hackathon-image-preview-row">
+                {hackathonImages.map((img, i) => (
+                  <div key={img.url + i} className="hackathon-image-preview">
+                    <img src={img.url} alt={img.name ?? ''} />
+                    <button type="button" className="hackathon-image-remove" onClick={() => removeHackathonImage(i)} aria-label="Remove image">×</button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <label className="field-label">
+              {editingHackathon ? 'Add more images' : 'Images'}
+              <input className="field-input" name="images" type="file" accept="image/*" multiple />
+            </label>
+
+            {hackathonStatus && (
+              <p className={`admin-status${hackathonStatus.error ? ' admin-status--error' : ''}`}>{hackathonStatus.msg}</p>
+            )}
+            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              <button type="submit" className="btn-submit" style={{ flex: 1 }}>
+                {editingHackathon ? 'Update Hackathon' : 'Create Hackathon'}
+              </button>
+              {editingHackathon && (
+                <button type="button" className="btn-ghost" style={{ minWidth: 110 }} onClick={clearHackathonForm}>Cancel</button>
+              )}
+            </div>
+          </form>
+
+          <p className="admin-empty" style={{ fontSize: 11, padding: '6px 0 0', color: 'var(--ink-faint)' }}>
+            Drag ⠿ to reorder — order controls the scroll sequence on the public page.
+          </p>
+          <div className="admin-list">
+            {hackathons.length === 0 && <p className="admin-empty">No hackathons yet.</p>}
+            {hackathons.map((h, i) => (
+              <article
+                key={h.id}
+                className={`admin-list-item admin-drag-item${hackathonDragOverIndex === i ? ' admin-drag-over' : ''}`}
+                draggable
+                onDragStart={() => setHackathonDragIndex(i)}
+                onDragOver={e => { e.preventDefault(); setHackathonDragOverIndex(i) }}
+                onDragLeave={() => setHackathonDragOverIndex(null)}
+                onDrop={() => handleHackathonDrop(i)}
+                onDragEnd={() => { setHackathonDragIndex(null); setHackathonDragOverIndex(null) }}
+              >
+                <span className="admin-drag-handle" aria-hidden="true">⠿</span>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <span className="admin-preview-label">{h.index} · {h.year} · {h.images.length} image{h.images.length === 1 ? '' : 's'}</span>
+                  <h3>{h.title}</h3>
+                  <p>{h.description.slice(0, 110)}{h.description.length > 110 ? '…' : ''}</p>
+                  <div style={{ display: 'flex', gap: 6, marginTop: 10, flexWrap: 'wrap' }}>
+                    {h.tags.map(t => <span key={t} className="project-tag">{t}</span>)}
+                  </div>
+                </div>
+                <div className="admin-row-actions">
+                  <button type="button" className="admin-btn-sm" onClick={() => startEditHackathon(h)}>Edit</button>
+                  <button type="button" className="admin-btn-sm admin-btn-sm--danger" onClick={() => deleteHackathonById(h.id)}>Delete</button>
                 </div>
               </article>
             ))}
