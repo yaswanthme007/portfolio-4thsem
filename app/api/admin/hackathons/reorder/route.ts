@@ -18,6 +18,7 @@ export async function POST(request: NextRequest) {
 
   revalidatePath('/')
   revalidatePath('/hackathons')
+  revalidatePath('/dashboard-yaswanth')
 
   return NextResponse.json({ ok: true, hackathons })
 }
