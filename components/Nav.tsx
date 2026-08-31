@@ -7,11 +7,12 @@ import type { Route } from 'next'
 import { ThemeToggle } from './ThemeToggle'
 
 const LINKS: { href: Route; label: string }[] = [
-  { href: '/',         label: 'Home' },
-  { href: '/work',     label: 'Work' },
-  { href: '/about',    label: 'About' },
-  { href: '/services', label: 'Services' },
-  { href: '/contact',  label: 'Contact' },
+  { href: '/',           label: 'Home' },
+  { href: '/work',       label: 'Work' },
+  { href: '/hackathons', label: 'Hackathons' },
+  { href: '/about',      label: 'About' },
+  { href: '/services',   label: 'Services' },
+  { href: '/contact',    label: 'Contact' },
 ]
 
 export function Nav() {
